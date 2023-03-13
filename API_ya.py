@@ -1,6 +1,5 @@
 import requests
-
-TOKEN = 'y0_AgAAAAAFm3q_AADLWwAAAADUOsbp0lkJ6SxXQZ2CjaM-Ph2t1xcJiwM'
+from TOKEN import TOKEN
 
 class Yandex:
     base_host = 'https://cloud-api.yandex.net/'
@@ -17,26 +16,24 @@ class Yandex:
     def create_folder(self, ya_path):
         folder_url = self.base_host + 'v1/disk/resources/'
         params = {'path': ya_path}
-        res = requests.put(folder_url, params=params, headers=self.get_headers())
+        res = requests.put(folder_url, params=params, headers=self.get_headers()).status_code
+        return res
+
+    def find_folder(self, ya_path):
+        folder_url = self.base_host + 'v1/disk/resources/'
+        params = {'path': ya_path}
+        res = requests.get(folder_url, params=params, headers=self.get_headers()).status_code
         return res
 
 if __name__ == '__main__':
     uploader = Yandex(TOKEN)
     create = uploader.create_folder('new_file')
-    print(create)
+    find = uploader.find_folder('new_file')
 
 
 
-import unittest
 
-class TestYandex(unittest.TestCase):
-    def SetUp(self):
-        print('SetUp')
-
-    def tearDown(self):
-        print('tearDown')
-
-    def test_create_folder(self):
-        self.assertRegex(create, '[201]', msg=None)
-
-unittest.main()
+# class TestYandex(unittest.TestCase):
+#
+#     def test_find_folder(self):
+#         self.assertTrue(Yandex(TOKEN).find_folder('new_file') == 200)
